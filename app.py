@@ -4,26 +4,26 @@ import json
 import streamlit as st
 import time
 import random
+
 # from streamlit_chat import message
-# from connections import Connections
+from connections import get_lambda_client
 
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
+lambda_client = get_lambda_client()
 
 
 def log(message):
     logger.info(message)
+
+
 avatar = {
     "user": "https://api.dicebear.com/7.x/notionists-neutral/svg?seed=Felix",
-    "assistant": "https://assets-global.website-files.com/62b1b25a5edaf66f5056b068/62d1345ba688202d5bfa6776_aws-sagemaker-eyecatch-e1614129391121.png"
+    "assistant": "https://assets-global.website-files.com/62b1b25a5edaf66f5056b068/62d1345ba688202d5bfa6776_aws-sagemaker-eyecatch-e1614129391121.png",
 }
 
-# lambda_client = Connections.lambda_client
 
-
-# agent_id = Connections.agent_id
-# get unique session id
 def response_generator():
     response = random.choice(
         [
@@ -34,7 +34,7 @@ def response_generator():
             "Hola, gracias por contactarte. ¿Cómo puedo ayudarte?",
             "🤖 ¡Saludos humanos! ¿Cuál es la misión?",
             "👋 ¡Hola! Soy tu asistente. ¿Listo/a?",
-            "🚀 ¡A despegar! ¿Qué consultamos?"
+            "🚀 ¡A despegar! ¿Qué consultamos?",
         ]
     )
     return response
@@ -48,23 +48,17 @@ def get_response(user_input, session_id):
     Get response from genai Lambda
     """
     print(f"session id: {session_id}")
-    payload = {"body": {"query": user_input, "session_id": session_id}}
-
-    # lambda_function_name = Connections.lambda_function_name
-    # print(f"lambda_function_name: {lambda_function_name}")
-    print(f"payload: {payload}")
-    response_output = {
-        "source": "system",
-        "answer": user_input
-        }
-    # response = lambda_client.invoke(
-    #     FunctionName=lambda_function_name,
-    #     InvocationType="RequestResponse",
-    #     Payload=json.dumps(payload),
-    # )
-    # response_output = json.loads(response["Payload"].read().decode("utf-8"))
+    # print(f"payload: {payload}")
+    # response_output = {
+    #     "source": "system",
+    #     "answer": user_input
+    #     }
+    response = lambda_client.invoke_sync(
+        payload={"body": {"query": user_input, "session_id": session_id}},
+    )
+    print(response)
+    response_output = response["response"]
     print(f"response_output from genai lambda: {response_output}")
-    time.sleep(3)
     return response_output
 
 
@@ -148,7 +142,7 @@ def show_message():
     for message in st.session_state.messages:
         with st.chat_message(message["role"], avatar=avatar[message["role"]]):
             st.markdown(message["content"])
-    
+
     if user_input := st.chat_input("¿Cómo puedo ayudarte hoy"):
         session_id = st.session_state.session_id
         st.session_state.messages.append({"role": "user", "content": user_input})
@@ -161,9 +155,10 @@ def show_message():
             # vertical_space.empty()
             response_output = get_response(user_input, session_id)
             # response = get_agent_response(streaming_response)
-            answer = "**Respuesta**: \n\n" + response_output["answer"]
+            answer = "**Respuesta**: \n\n" + response_output["body"]
             st.session_state.messages.append({"role": "assistant", "content": answer})
             assistant.write(answer)
+
 
 def main():
     """
@@ -175,6 +170,7 @@ def main():
     initialization()
     # --- Section 3 ---
     show_message()
+
 
 if __name__ == "__main__":
     main()
