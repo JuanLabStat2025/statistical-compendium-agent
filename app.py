@@ -13,11 +13,6 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 lambda_client = get_lambda_client()
 
-
-def log(message):
-    logger.info(message)
-
-
 avatar = {
     "user": "https://api.dicebear.com/7.x/notionists-neutral/svg?seed=Felix",
     "assistant": "https://assets-global.website-files.com/62b1b25a5edaf66f5056b068/62d1345ba688202d5bfa6776_aws-sagemaker-eyecatch-e1614129391121.png",
@@ -47,18 +42,13 @@ def get_response(user_input, session_id):
     """
     Get response from genai Lambda
     """
-    print(f"session id: {session_id}")
-    # print(f"payload: {payload}")
-    # response_output = {
-    #     "source": "system",
-    #     "answer": user_input
-    #     }
+    logger.info(f"session id: {session_id}")
     response = lambda_client.invoke_sync(
         payload={"body": {"query": user_input, "session_id": session_id}},
     )
-    print(response)
+    logger.info(response)
     response_output = response["response"]
-    print(f"response_output from genai lambda: {response_output}")
+    logger.info(f"response_output from genai lambda: {response_output}")
     return response_output
 
 
@@ -67,7 +57,7 @@ def header():
     App Header setting
     """
     with st.sidebar:
-        st.header("📚 User Guide")
+        st.header("📚 Guía de uso")
         st.markdown(
             """
         ### How to Use
@@ -119,17 +109,13 @@ def initialization():
     """
     Initialize sesstion_state variables
     """
-    # --- Initialize session_state ---
     if "session_id" not in st.session_state:
         st.session_state.session_id = str(datetime.now()).replace(" ", "_")
         st.session_state.messages = []
-        st.session_state.questions = []
-        st.session_state.answers = []
 
     if "temp" not in st.session_state:
         st.session_state.temp = ""
 
-    # Initialize cache in session state
     if "cache" not in st.session_state:
         st.session_state.cache = {}
 
@@ -138,7 +124,6 @@ def show_message():
     """
     Show user question and answers
     """
-    # Start a new conversation
     for message in st.session_state.messages:
         with st.chat_message(message["role"], avatar=avatar[message["role"]]):
             st.markdown(message["content"])
@@ -151,10 +136,7 @@ def show_message():
 
         with st.spinner("Procesando tu información ...", show_time=True):
             assistant = st.chat_message("assistant", avatar=avatar["assistant"])
-            # vertical_space = show_empty_container()
-            # vertical_space.empty()
             response_output = get_response(user_input, session_id)
-            # response = get_agent_response(streaming_response)
             answer = "**Respuesta**: \n\n" + response_output["body"]
             st.session_state.messages.append({"role": "assistant", "content": answer})
             assistant.write(answer)
@@ -164,11 +146,8 @@ def main():
     """
     Streamlit APP
     """
-    # --- Section 1 ---
     header()
-    # --- Section 2 ---
     initialization()
-    # --- Section 3 ---
     show_message()
 
 

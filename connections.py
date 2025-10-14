@@ -13,14 +13,6 @@ if os.environ.get("ACCOUNT_ID") is None:
 
 if os.environ.get("LAMBDA_FUNCTION_NAME") is None:
     try:
-        # read in json file cdk.json
-        # with open("../../cdk.json", encoding="utf-8") as f:
-        #     data = json.load(f)
-        # config = data["context"]["config"]
-        # STACK_NAME = config["names"]["stack_name"]
-        # STREAMLIT_INVOKE_LAMBDA_FUNCTION_NAME = config["names"][
-        #     "streamlit_lambda_function_name"
-        # ]
         os.environ["LAMBDA_FUNCTION_NAME"] = "CallAgentStack-CallAgentLambdaFunction983302A0-R3Ojk7yZoT1P"
     except Exception:
         raise ValueError("LAMBDA_FUNCTION_NAME not found in environment")
@@ -47,7 +39,7 @@ class OptimizedLambdaClient:
                 read_timeout=30,
             )
             self._session = boto3.Session()
-            self._client = self._session.client("lambda", config=config)
+            self._client = self._session.client("lambda")
 
         return self._client
 
