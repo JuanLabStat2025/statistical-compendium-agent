@@ -4,14 +4,13 @@ import streamlit as st
 import time
 from base64 import b64encode
 import random
-
 # from streamlit_chat import message
-# from connections import get_lambda_client
+from connections import get_lambda_client
 
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-# lambda_client = get_lambda_client()
+lambda_client = get_lambda_client()
 
 
 avatar = {
@@ -44,13 +43,12 @@ def get_response(user_input, session_id):
     Get response from genai Lambda
     """
     logger.info(f"session id: {session_id}")
-    # response = lambda_client.invoke_sync(
-    #     payload={"body": {"query": user_input, "session_id": session_id}},
-    # )
-    response_output = {"body": "a"}
+    response = lambda_client.invoke_sync(
+        payload={"body": {"query": user_input, "session_id": session_id}},
+    )
     time.sleep(3)
-    # logger.info(response)
-    # response_output = response["response"]
+    logger.info(response)
+    response_output = response["response"]
     logger.info(f"response_output from genai lambda: {response_output}")
     return response_output
 
@@ -134,7 +132,7 @@ def header():
         page_icon=":computer:",
         layout="wide",
     )
-    # Creating two columns, logo on the left and title on the right
+
     col1_1, col1_2 = st.columns([1, 12], vertical_alignment="top")
     with col1_1:
         inei_logo_html = f"""
