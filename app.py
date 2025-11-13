@@ -387,7 +387,7 @@ def main():
     Streamlit APP
     """
     header()
-    show_header("./assets/assets/img/Logotipo-INEI.png")
+    show_header("./assets/img/Logotipo-INEI.png")
     set_background("./assets/img/Placa circuito.png")
     initialization()
     show_message()
