@@ -183,7 +183,7 @@ def header():
         col1_1, col1_2 = st.columns([1, 3], gap="small")
         with col1_1:
             st.image(
-                "./assets/img/Mascota labstat.png",
+                "./assets/img/Mascota Labstat.png",
                 width=140,
             )
         with col1_2:
