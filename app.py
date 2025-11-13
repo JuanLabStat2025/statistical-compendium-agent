@@ -4,6 +4,7 @@ import streamlit as st
 import time
 from base64 import b64encode
 import random
+
 # from streamlit_chat import message
 from connections import get_lambda_client
 
@@ -61,14 +62,17 @@ def header():
     inter_b64 = get_base64("./assets/fonts/Inter-VariableFont_opsz,wght.ttf")
     abeeze_b64 = get_base64("./assets/fonts/ABeeZee-Italic.ttf")
     inei_logo_b64 = get_base64("./assets/img/Logotipo-INEI.png")
-    st.markdown("""
+    st.markdown(
+        """
     <style>
     [data-testid="stMainBlockContainer"] {
         padding-top: 1rem;      /* antes suele ser ~6rem */
         padding-bottom: 1rem;   /* ajusta si quieres */
     }
     </style>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
     with st.sidebar:
         sidebar_header = f"""
         <style>
@@ -90,7 +94,8 @@ def header():
         <div class="header_text">📚 Guía de uso</div>
         """
         st.markdown(sidebar_header, unsafe_allow_html=True)
-        st.markdown( f"""
+        st.markdown(
+            f"""
         <style>
         @font-face {{
             font-family: "Inter";
@@ -118,7 +123,7 @@ def header():
             <li>Ver historial: desplácese hacia arriba para ver su historial de chat.</li>
         </ol>
         """,
-        unsafe_allow_html=True
+            unsafe_allow_html=True,
         )
 
         if st.button("Reset Chat", type="primary", width="stretch"):
@@ -172,15 +177,13 @@ def header():
         <div class="beta-badge">Versión beta de prueba</div>"""
         st.markdown(badge_html, unsafe_allow_html=True)
 
-    _, col1, _ = st.columns(
-        [1, 3, 1]
-    )
-    font_b64 = get_base64(r"https://d34fchbsekv2tp.cloudfront.net/assets/fonts/KdamThmorPro-Regular.ttf")
+    _, col1, _ = st.columns([1, 3, 1])
+    font_b64 = get_base64("./assets/fonts/KdamThmorPro-Regular.ttf")
     with col1:
-        col1_1, col1_2 = st.columns([1,3], gap="small")
+        col1_1, col1_2 = st.columns([1, 3], gap="small")
         with col1_1:
             st.image(
-                r"assets\img\Mascota labstat.png",
+                "./assets/img/Mascota labstat.png",
                 width=140,
             )
         with col1_2:
@@ -254,7 +257,8 @@ def get_base64(bin_file):
 
 def set_background(png_file):
     bin_str = get_base64(png_file)
-    page_bg_img = ("""
+    page_bg_img = (
+        """
     <style>
     .st-emotion-cache-6px8kg {
     background-image: linear-gradient(
@@ -329,6 +333,7 @@ def show_message():
             assistant.write(answer)
         enable_chat_input()
 
+
 def show_header(logo_path):
     bin_header = get_base64(logo_path)
     page_hd_image = f"""
@@ -354,6 +359,7 @@ def show_header(logo_path):
         <img src="data:image/png;base64,{bin_header}" alt="INEI"/>
     </div>"""
     st.markdown(page_hd_image, unsafe_allow_html=True)
+
 
 def show_footer(logo_path):
     bin_footer = get_base64(logo_path)
@@ -381,11 +387,11 @@ def main():
     Streamlit APP
     """
     header()
-    show_header(r"https://d34fchbsekv2tp.cloudfront.net/assets/assets/img/Logotipo-INEI.png")
-    set_background(r"https://d34fchbsekv2tp.cloudfront.net/assets/img/Placa circuito.png")
+    show_header("./assets/assets/img/Logotipo-INEI.png")
+    set_background("./assets/img/Placa circuito.png")
     initialization()
     show_message()
-    show_footer(r"https://d34fchbsekv2tp.cloudfront.net/assets/img/Logo de Labstat.png")
+    show_footer("./assets/img/Logo de Labstat.png")
 
 
 if __name__ == "__main__":
