@@ -57,10 +57,10 @@ def header():
     """
     App Header setting
     """
-    font_b64 = get_base64(r"https://d34fchbsekv2tp.cloudfront.net/assets/fonts/KdamThmorPro-Regular.ttf")
-    inter_b64 = get_base64(r"https://d34fchbsekv2tp.cloudfront.net/assets/fonts/Inter-VariableFont_opsz,wght.ttf")
-    abeeze_b64 = get_base64(r"https://d34fchbsekv2tp.cloudfront.net/assets/fonts/ABeeZee-Italic.ttf")
-    inei_logo_b64 = get_base64(r"https://d34fchbsekv2tp.cloudfront.net/assets/img/Logotipo-INEI.png")
+    font_b64 = get_base64("./assets/fonts/KdamThmorPro-Regular.ttf")
+    inter_b64 = get_base64("./assets/fonts/Inter-VariableFont_opsz,wght.ttf")
+    abeeze_b64 = get_base64("./assets/fonts/ABeeZee-Italic.ttf")
+    inei_logo_b64 = get_base64("./assets/img/Logotipo-INEI.png")
     st.markdown("""
     <style>
     [data-testid="stMainBlockContainer"] {
