@@ -1,2 +1,12 @@
+[server]
+enableStaticServing = true
+
 [browser]
 gatherUsageStats = false
+
+[client]
+toolbarMode="minimal"
+
+[theme.sidebar]
+backgroundColor="#2196B5"
+primaryColor="#7B2CA0"
