@@ -57,10 +57,10 @@ def header():
     """
     App Header setting
     """
-    font_b64 = get_base64(r"assets\fonts\KdamThmorPro-Regular.ttf")
-    inter_b64 = get_base64(r"assets\fonts\Inter-VariableFont_opsz,wght.ttf")
-    abeeze_b64 = get_base64(r"assets\fonts\ABeeZee-Italic.ttf")
-    inei_logo_b64 = get_base64(r"assets\img\Logotipo-INEI.png")
+    font_b64 = get_base64(r"https://d34fchbsekv2tp.cloudfront.net/assets/fonts/KdamThmorPro-Regular.ttf")
+    inter_b64 = get_base64(r"https://d34fchbsekv2tp.cloudfront.net/assets/fonts/Inter-VariableFont_opsz,wght.ttf")
+    abeeze_b64 = get_base64(r"https://d34fchbsekv2tp.cloudfront.net/assets/fonts/ABeeZee-Italic.ttf")
+    inei_logo_b64 = get_base64(r"https://d34fchbsekv2tp.cloudfront.net/assets/img/Logotipo-INEI.png")
     st.markdown("""
     <style>
     [data-testid="stMainBlockContainer"] {
@@ -175,7 +175,7 @@ def header():
     _, col1, _ = st.columns(
         [1, 3, 1]
     )
-    font_b64 = get_base64(r"assets\fonts\KdamThmorPro-Regular.ttf")
+    font_b64 = get_base64(r"https://d34fchbsekv2tp.cloudfront.net/assets/fonts/KdamThmorPro-Regular.ttf")
     with col1:
         col1_1, col1_2 = st.columns([1,3], gap="small")
         with col1_1:
@@ -381,11 +381,11 @@ def main():
     Streamlit APP
     """
     header()
-    show_header(r"assets\img\Logotipo-INEI.png")
-    set_background(r"assets\img\Placa circuito.png")
+    show_header(r"https://d34fchbsekv2tp.cloudfront.net/assets/assets/img/Logotipo-INEI.png")
+    set_background(r"https://d34fchbsekv2tp.cloudfront.net/assets/img/Placa circuito.png")
     initialization()
     show_message()
-    show_footer(r"assets\img\Logo de Labstat.png")
+    show_footer(r"https://d34fchbsekv2tp.cloudfront.net/assets/img/Logo de Labstat.png")
 
 
 if __name__ == "__main__":
