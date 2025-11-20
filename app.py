@@ -5,10 +5,7 @@ import time
 from base64 import b64encode
 import random
 
-# from connections import get_lambda_client
-
-def get_lambda_client():
-    pass
+from connections import get_lambda_client
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
