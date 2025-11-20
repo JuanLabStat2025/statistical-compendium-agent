@@ -5,7 +5,10 @@ import time
 from base64 import b64encode
 import random
 
-from connections import get_lambda_client
+#from connections import get_lambda_client
+
+def get_lambda_client():
+    return
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -89,7 +92,7 @@ def header():
             text-align: center;
         }}
         </style>
-        <div class="header_text">📚 Guía de uso</div>
+        <div class="header_text">ℹ️ Nota importante</div>
         """
         st.markdown(sidebar_header, unsafe_allow_html=True)
         st.markdown(
@@ -121,17 +124,65 @@ def header():
             margin-bottom: 0.5rem;
         }}
         </style>
-        <div class="guia-subtitle"><b>ℹ️ Importante:</b></div>
         <div class="guia-disclaimer">La información de este chatbot se genera mediante IA. Aunque se busca precisión, las respuestas pueden incluir errores u omisiones.</div>
-        <div class="guia-subtitle"><b>📖 ¿Cómo se usa?<b></div>
-        <ol class="guia-list">
-            <li>Comenzar a chatear: Escribe tu mensaje en el cuadro de entrada en la parte inferior del chat.</li>
-            <li>Continua conversando: El chatbot recuerda tu conversación.</li>
-            <li>Ver historial: desplácese hacia arriba para ver su historial de chat.</li>
-        </ol>
         """,
             unsafe_allow_html=True,
         )
+        st.markdown("""
+            <style>
+            .feedback-container {
+                margin-top: 30px;
+                padding: 15px;
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                border-radius: 10px;
+            }
+            .feedback-title {
+                font-family: "KdamThmorPro";
+                font-style: normal;
+                font-size: 27px;
+                color: white;
+                text-align: center;
+            }
+            .stTextArea textarea {
+                background-color: #FFFFFF !important;
+                color: #2D3748 !important;
+                border: 2px solid #6B46C1 !important;
+                border-radius: 10px !important;
+                font-size: 15px !important;
+                padding: 12px !important;
+            }
+            .stTextArea textarea:focus {
+                border-color: #8B5CF6 !important;
+                box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2) !important;
+            }
+            .stTextArea textarea::placeholder {
+                color: #999999 !important;
+            }
+            </style>
+        """, unsafe_allow_html=True)
+
+        st.markdown('<div class="feedback-title">💬 Tu opinión importa</div> <br>', unsafe_allow_html=True)
+        
+        comentarios = st.text_area(
+            "comentarios",
+            placeholder="✍️ Cuéntanos tu experiencia, sugerencias o reporta algún problema...",
+            height=120,
+            max_chars=500,
+            key="feedback_comments",
+            label_visibility="collapsed"
+        )
+        if st.button("📤 Enviar feedback", use_container_width=True, type="primary"):
+            if comentarios:
+                # Validación básica de email
+                pass
+            else:
+                st.warning("Por favor escribe tus comentarios")
+
+
+
+        st.markdown('<div class="feedback-title">🔄 ¿Algún problema?', unsafe_allow_html=True)
+        st.markdown("<div class='guia-disclaimer'>Resetea el chat para empezar de nuevo</div>", unsafe_allow_html=True)
 
         if st.button("Reset Chat", type="primary", width="stretch"):
             st.session_state.messages = [
