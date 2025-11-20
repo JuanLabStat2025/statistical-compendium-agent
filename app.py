@@ -5,9 +5,10 @@ import time
 from base64 import b64encode
 import random
 
-# from streamlit_chat import message
-from connections import get_lambda_client
+# from connections import get_lambda_client
 
+def get_lambda_client():
+    pass
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -115,8 +116,17 @@ def header():
             font-style: normal;
             padding-left: 0.8rem;
         }}
+        .guia-disclaimer {{
+            font-family: "Inter";
+            font-style: normal;
+            font-size: 16px;
+            padding-left: 0.8rem;
+            margin-bottom: 0.5rem;
+        }}
         </style>
-        <div class="guia-subtitle">¿Cómo se usa?</div>
+        <div class="guia-subtitle"><b>ℹ️ Importante:</b></div>
+        <div class="guia-disclaimer">La información de este chatbot se genera mediante IA. Aunque se busca precisión, las respuestas pueden incluir errores u omisiones.</div>
+        <div class="guia-subtitle"><b>📖 ¿Cómo se usa?<b></div>
         <ol class="guia-list">
             <li>Comenzar a chatear: Escribe tu mensaje en el cuadro de entrada en la parte inferior del chat.</li>
             <li>Continua conversando: El chatbot recuerda tu conversación.</li>
@@ -133,7 +143,7 @@ def header():
             st.rerun()
 
     st.set_page_config(
-        page_title="Numi Bot",
+        page_title="Numy Bot",
         page_icon=":computer:",
         layout="wide",
     )
@@ -196,9 +206,10 @@ def header():
                 font-size: 42px;
                 line-height: 100%;
                 color: #000000;
+                line-height: 140%;
             }}
             </style>
-            <div class="hero-title">Numy: Tu asistente<br><br>de Datos Estadísticos</div>
+            <div class="hero-title">Numy: Tu asistente de Datos Estadísticos</div>
             """
             st.markdown(bot_title_html, unsafe_allow_html=True)
 
@@ -243,7 +254,7 @@ def header():
         </style>
         <div class="chat-bubble">
             <div class="chat-bubble-title">¿Cómo consultar?</div>
-            <div class="chat-bubble-subtitle">[Tema de interés + año + ciudad]</div>
+            <div class="chat-bubble-subtitle">Escribe en la casilla gris de abajo el tema o indicador de interés, seguido del año y la región o ciudad.<br>Ejemplo: PBI de Ica en el 2022</div>
         </div>
         """
         st.write(buble_content_html, unsafe_allow_html=True)
@@ -262,8 +273,8 @@ def set_background(png_file):
     <style>
     .st-emotion-cache-6px8kg {
     background-image: linear-gradient(
-            rgba(255, 255, 255, 0.75),  /* color de la "capa" + opacidad */
-            rgba(255, 255, 255, 0.75)
+            rgba(255, 255, 255, 0.90),
+            rgba(255, 255, 255, 0.90)
         ),
         url("data:image/png;base64,%s");;
     background-size: cover;
@@ -313,7 +324,7 @@ def show_message():
             st.markdown(message["content"])
 
     if user_input := st.chat_input(
-        "¿Cómo puedo ayudarte hoy",
+        "¿Cómo puedo ayudarte hoy?",
         max_chars=150,
         width="stretch",
         disabled=st.session_state.chat_button,
@@ -332,6 +343,18 @@ def show_message():
             st.session_state.messages.append({"role": "assistant", "content": answer})
             assistant.write(answer)
         enable_chat_input()
+    st.markdown("""<style>
+    [data-testid="stChatInputTextArea"] {
+        padding: 12px 0;
+        min-height: 80px !important;
+        font-size: 20px !important;
+    }
+    
+    .stChatInput div {
+        min-height: 80px !important;
+        font-size: 16px !important;
+    }
+    </style>""", unsafe_allow_html=True)
 
 
 def show_header(logo_path):
