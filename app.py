@@ -48,9 +48,10 @@ def get_response(user_input, session_id):
     time.sleep(3)
     logger.info(response)
     try:
-        response_output = response["answer"]
+        response["answer"]
+        response_output = response
     except:
-        response_output = "Hola no entendí tu mensaje. Puedes reformular mejor tu pregunta por favor!"
+        response_output = {"answer": "Hola no entendí tu mensaje. Puedes reformular mejor tu pregunta por favor!"}
     logger.info(f"response_output from genai lambda: {response_output}")
     return response_output
 
@@ -387,7 +388,7 @@ def show_message():
         with st.spinner("Procesando tu información ...", show_time=True):
             assistant = st.chat_message("assistant", avatar=avatar["assistant"])
             response_output = get_response(user_input, session_id)
-            answer = "**Respuesta**: \n\n" + response_output["body"]
+            answer = "**Respuesta**: \n\n" + response_output["answer"]
             st.session_state.messages.append({"role": "assistant", "content": answer})
             assistant.write(answer)
         enable_chat_input()
