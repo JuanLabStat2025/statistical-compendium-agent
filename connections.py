@@ -13,7 +13,7 @@ if os.environ.get("ACCOUNT_ID") is None:
 
 if os.environ.get("LAMBDA_FUNCTION_NAME") is None:
     try:
-        os.environ["LAMBDA_FUNCTION_NAME"] = "CallAgentStack-CallAgentLambdaFunction983302A0-R3Ojk7yZoT1P"
+        os.environ["LAMBDA_FUNCTION_NAME"] = "getAgentResponse"
     except Exception:
         raise ValueError("LAMBDA_FUNCTION_NAME not found in environment")
 else:
