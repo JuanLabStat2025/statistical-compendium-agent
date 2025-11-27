@@ -51,7 +51,7 @@ class OptimizedLambdaClient:
             response = self.client.invoke(
                 FunctionName=os.environ["LAMBDA_FUNCTION_NAME"],
                 InvocationType="RequestResponse",
-                Payload=json.dumps(payload, ensure_ascii=False),
+                Payload=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
             )
 
             # Leer respuesta

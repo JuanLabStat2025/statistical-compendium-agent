@@ -4,6 +4,7 @@ import streamlit as st
 import time
 from base64 import b64encode
 import random
+import json
 
 from connections import get_lambda_client
 
@@ -48,9 +49,9 @@ def get_response(user_input, session_id):
     time.sleep(3)
     logger.info(response)
     try:
-        response_output = {"answer": response["response"]}
+        response_output = {"answer": json.loads(response["body"])["answer"]}
     except Exception as e:
-        response_output = {"answer": f"Hola no entendí tu mensaje. Puedes reformular mejor tu pregunta por favor!\n{response}"}
+        response_output = {"answer": f"Hola no entendí tu mensaje. Puedes reformular mejor tu pregunta por favor!"}
     logger.info(f"response_output from genai lambda: {response_output}")
     return response_output
 
