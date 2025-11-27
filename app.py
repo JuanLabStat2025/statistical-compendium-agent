@@ -48,8 +48,7 @@ def get_response(user_input, session_id):
     time.sleep(3)
     logger.info(response)
     try:
-        response["answer"]
-        response_output = response
+        response_output = {"answer": response["response"]}
     except Exception as e:
         response_output = {"answer": f"Hola no entendí tu mensaje. Puedes reformular mejor tu pregunta por favor!\n{response}"}
     logger.info(f"response_output from genai lambda: {response_output}")
