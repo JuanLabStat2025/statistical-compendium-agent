@@ -374,7 +374,7 @@ def show_message():
 
     if user_input := st.chat_input(
         "¿Cómo puedo ayudarte hoy?",
-        max_chars=150,
+        max_chars=300,
         width="stretch",
         disabled=st.session_state.chat_button,
         on_submit=disable_chat_input,
