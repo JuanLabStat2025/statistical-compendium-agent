@@ -1,32 +1,15 @@
-import streamlit as st
+from base64 import b64encode
 
-def clear_input():
+def get_base64(bin_file: str) -> str:
     """
-    Clear input when clicking `Clear conversation`.
+    Reads a binary file and returns its base64 encoded string.
+
+    Args:
+        bin_file (str): Path to the binary file.
+
+    Returns:
+        str: Base64 encoded string of the file content.
     """
-    # st.session_state.session_id = ""
-    st.session_state.questions = []
-    st.session_state.answers = []
-    st.session_state["temp"] = st.session_state["messages"]
-    st.session_state["messages"] = []
-    st.session_state["input"] = ""
-
-
-def show_empty_container(height: int = 100) -> st.container:
-    """
-    Display empty container to hide UI elements below while thinking
-
-    Parameters
-    ----------
-    height : int
-        Height of the container (number of lines)
-
-    Returns
-    -------
-    st.container
-        Container with large vertical space
-    """
-    empty_placeholder = st.empty()
-    with empty_placeholder.container():
-        st.markdown("<br>" * height, unsafe_allow_html=True)
-    return empty_placeholder
+    with open(bin_file, "rb") as f:
+        data = f.read()
+    return b64encode(data).decode()
