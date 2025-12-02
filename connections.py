@@ -82,5 +82,9 @@ class OptimizedLambdaClient:
             return None
 
 @st.cache_resource
-def get_lambda_client(lambda_function_name: str) -> OptimizedLambdaClient:
-    return  OptimizedLambdaClient(lambda_function_name=lambda_function_name)
+def get_lambda_client_bedrock(lambda_function_name: str) -> OptimizedLambdaClient:
+    return OptimizedLambdaClient(lambda_function_name=lambda_function_name)
+
+@st.cache_resource
+def get_lambda_client_feedback(lambda_function_name: str) -> OptimizedLambdaClient:
+    return OptimizedLambdaClient(lambda_function_name=lambda_function_name)

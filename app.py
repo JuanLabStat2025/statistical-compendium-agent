@@ -6,12 +6,12 @@ from base64 import b64encode
 import random
 import json
 
-from connections import get_lambda_client
+from connections import get_lambda_client_bedrock, get_lambda_client_feedback
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-lambda_client_bedrock = get_lambda_client("getAgentResponse")
-lambda_client_feedback = get_lambda_client("SendFeedbackFunction")
+lambda_client_bedrock = get_lambda_client_bedrock("getAgentResponse")
+lambda_client_feedback = get_lambda_client_feedback("SendFeedbackFunction")
 
 
 avatar = {
