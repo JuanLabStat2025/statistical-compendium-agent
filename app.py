@@ -10,7 +10,8 @@ from connections import get_lambda_client
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-lambda_client = get_lambda_client()
+lambda_client_bedrock = get_lambda_client("getAgentResponse")
+lambda_client_feedback = get_lambda_client("SendFeedbackFunction")
 
 
 avatar = {
@@ -43,7 +44,7 @@ def get_response(user_input, session_id):
     Get response from genai Lambda
     """
     logger.info(f"session id: {session_id}")
-    response = lambda_client.invoke_sync(
+    response = lambda_client_bedrock.invoke_sync(
         payload={"body": {"query": user_input, "session_id": session_id}},
     )
     time.sleep(3)
@@ -175,10 +176,15 @@ def header():
         )
         if st.button("📤 Enviar feedback", use_container_width=True, type="primary"):
             if comentarios:
-                # Validación básica de email
-                pass
+                response = lambda_client_feedback.invoke_sync(
+                    payload={"body": {"feedback": comentarios, "session_id": session_id}},
+                )
+                if response["statusCode"] == 200:
+                    st.success("Feedback enviado correctamente", icon="✅")
+                else:
+                    st.error("Error al enviar el feedback", icon="❌")
             else:
-                st.warning("Por favor escribe tus comentarios")
+                st.warning("Por favor escribe tus comentarios", icon="⚠️")
 
 
 
@@ -199,18 +205,19 @@ def header():
 
     col1_1, col1_2 = st.columns([1, 12], vertical_alignment="top")
     with col1_1:
-        inei_logo_html = f"""
-        <style>
-        .hero-inei-logo {{
-            position: relative;
-            top: 1px;
-            left: 30px;
-            height: 100px;
-        }}
-        </style>
-        <img src="data:image/png;base64,{inei_logo_b64}" class="hero-inei-logo" />
-        """
-        st.markdown(inei_logo_html, unsafe_allow_html=True)
+        pass
+        # inei_logo_html = f"""
+        # <style>
+        # .hero-inei-logo {{
+        #     position: relative;
+        #     top: 1px;
+        #     left: 30px;
+        #     height: 100px;
+        # }}
+        # </style>
+        # <img src="data:image/png;base64,{inei_logo_b64}" class="hero-inei-logo" />
+        # """
+        # st.markdown(inei_logo_html, unsafe_allow_html=True)
     with col1_2:
         badge_html = f"""
         <style>
@@ -433,8 +440,9 @@ def show_header(logo_path):
     st.markdown(page_hd_image, unsafe_allow_html=True)
 
 
-def show_footer(logo_path):
+def show_footer(logo_path, inei_logo_path):
     bin_footer = get_base64(logo_path)
+    bin_inei = get_base64(inei_logo_path)
     page_ft_image = f"""
     <style>
       .corner-badge{{
@@ -447,6 +455,7 @@ def show_footer(logo_path):
     }}
     </style>
     <div class="corner-badge">
+      <img src="data:image/png;base64,{bin_inei}" alt="INEI">
       <span>Power by:</span>
       <img src="data:image/png;base64,{bin_footer}" alt="LabStat">
     </div>
@@ -463,7 +472,7 @@ def main():
     set_background("./assets/img/Placa circuito.png")
     initialization()
     show_message()
-    show_footer("./assets/img/Logo de Labstat.png")
+    show_footer("./assets/img/Logo de Labstat.png", "./assets/img/Logotipo-INEI.png")
 
 
 if __name__ == "__main__":

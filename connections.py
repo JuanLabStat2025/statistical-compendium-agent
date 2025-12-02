@@ -23,10 +23,11 @@ else:
 class OptimizedLambdaClient:
     """Cliente Lambda optimizado para Streamlit"""
 
-    def __init__(self, region_name: str = "us-east-1"):
+    def __init__(self, region_name: str = "us-east-1", lambda_function_name: str = "getAgentResponse"):
         self.region_name = region_name
         self._client = None
         self._session = None
+        self._lambda_function_name = lambda_function_name
 
     @property
     def client(self):
@@ -49,7 +50,7 @@ class OptimizedLambdaClient:
         """Invocación síncrona optimizada"""
         try:
             response = self.client.invoke(
-                FunctionName=os.environ["LAMBDA_FUNCTION_NAME"],
+                FunctionName=self._lambda_function_name,
                 InvocationType="RequestResponse",
                 Payload=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
             )
@@ -78,7 +79,7 @@ class OptimizedLambdaClient:
         """Invocación asíncrona (fire and forget)"""
         try:
             response = self.client.invoke(
-                FunctionName=os.environ["LAMBDA_FUNCTION_NAME"],
+                FunctionName=self._lambda_function_name,
                 InvocationType="Event",  # Asíncrono
                 Payload=json.dumps(payload, ensure_ascii=False),
             )
@@ -90,5 +91,5 @@ class OptimizedLambdaClient:
             return None
 
 @st.cache_resource
-def get_lambda_client() -> OptimizedLambdaClient:
-    return  OptimizedLambdaClient()
+def get_lambda_client(lambda_function_name: str) -> OptimizedLambdaClient:
+    return  OptimizedLambdaClient(lambda_function_name=lambda_function_name)
