@@ -49,8 +49,10 @@ def get_response(user_input: str, session_id: str) -> Dict[str, Any]:
         response_output = {"answer": json.loads(response["body"])["answer"]}
     except Exception as e:
         logger.error(f"Error parsing response: {e}")
-        response_output = {"answer": "Hola, no entendí tu mensaje. ¡Puedes reformular mejor tu pregunta por favor!"}
-    
+        response_output = {
+            "answer": "Hola, no entendí tu mensaje. ¡Puedes reformular mejor tu pregunta por favor!"
+        }
+
     logger.info(f"response_output from genai lambda: {response_output}")
     return response_output
 
@@ -62,45 +64,61 @@ def header() -> None:
     # Load fonts
     font_b64 = get_base64(config.FONT_KDAM_THMOR)
     inter_b64 = get_base64(config.FONT_INTER)
-    
+
     # Main style
     st.markdown(styles.get_main_style(), unsafe_allow_html=True)
 
     with st.sidebar:
         # Sidebar Header
         st.markdown(styles.get_sidebar_header_style(font_b64), unsafe_allow_html=True)
-        
+
         # Sidebar Content
         st.markdown(styles.get_sidebar_content_style(inter_b64), unsafe_allow_html=True)
-        
+
         # Feedback Section
         st.markdown(styles.get_feedback_style(), unsafe_allow_html=True)
-        st.markdown('<div class="feedback-title">💬 Tu opinión importa</div> <br>', unsafe_allow_html=True)
-        
+        st.markdown(
+            '<div class="feedback-title">💬 Tu opinión importa</div> <br>',
+            unsafe_allow_html=True,
+        )
+
         comentarios = st.text_area(
             "comentarios",
             placeholder="✍️ Cuéntanos tu experiencia, sugerencias o reporta algún problema...",
             height=120,
             max_chars=500,
             key="feedback_comments",
-            label_visibility="collapsed"
+            label_visibility="collapsed",
         )
-        
+
         if st.button("📤 Enviar feedback", use_container_width=True, type="primary"):
             if comentarios:
                 response = lambda_client_feedback.invoke_sync(
-                    payload={"body": {"feedback": comentarios, "session_id": st.session_state.session_id}},
+                    payload={
+                        "body": {
+                            "feedback": comentarios,
+                            "session_id": st.session_state.session_id,
+                        }
+                    },
                 )
                 logger.info(json.dumps(response))
                 if response.get("statusCode") == 200:
                     st.success("Feedback enviado correctamente", icon="✅")
                 else:
-                    st.error(f"Error al enviar el feedback: {json.dumps(response)}", icon="❌")
+                    st.error(
+                        f"Error al enviar el feedback: {json.dumps(response)}",
+                        icon="❌",
+                    )
             else:
                 st.warning("Por favor escribe tus comentarios", icon="⚠️")
 
-        st.markdown('<div class="feedback-title">🔄 ¿Algún problema?', unsafe_allow_html=True)
-        st.markdown("<div class='guia-disclaimer'>Resetea el chat para empezar de nuevo</div>", unsafe_allow_html=True)
+        st.markdown(
+            '<div class="feedback-title">🔄 ¿Algún problema?', unsafe_allow_html=True
+        )
+        st.markdown(
+            "<div class='guia-disclaimer'>Resetea el chat para empezar de nuevo</div>",
+            unsafe_allow_html=True,
+        )
 
         if st.button("Reset Chat", type="primary", use_container_width=True):
             st.session_state.messages = [
@@ -180,19 +198,8 @@ def show_message() -> None:
             st.session_state.messages.append({"role": "assistant", "content": answer})
             assistant.write(answer)
         enable_chat_input()
-    
+
     st.markdown(styles.get_chat_input_style(), unsafe_allow_html=True)
-
-
-def show_header(logo_path: str) -> None:
-    """
-    Display the fixed header logo.
-
-    Args:
-        logo_path (str): Path to the logo image.
-    """
-    bin_header = get_base64(logo_path)
-    st.markdown(styles.get_fixed_logo_style(bin_header), unsafe_allow_html=True)
 
 
 def show_footer(logo_path: str, inei_logo_path: str) -> None:
@@ -221,14 +228,13 @@ def main() -> None:
 
     initialization()
     header()
-    show_header(config.IMG_LOGO_INEI)
     set_background(config.IMG_BACKGROUND)
-    
+
     # Main Content Layout
     col1_1, col1_2 = st.columns([1, 12], vertical_alignment="top")
     with col1_1:
         pass
-        
+
     with col1_2:
         abeeze_b64 = get_base64(config.FONT_ABEEZE)
         st.markdown(styles.get_beta_badge_style(abeeze_b64), unsafe_allow_html=True)
