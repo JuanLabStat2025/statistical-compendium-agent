@@ -45,7 +45,7 @@ def get_response(user_input, session_id):
     """
     logger.info(f"session id: {session_id}")
     response = lambda_client_bedrock.invoke_sync(
-        payload={"body": {"query": user_input, "session_id": st.session_state.session_id}},
+        payload={"body": {"query": user_input, "session_id": session_id}},
     )
     logger.info(response)
     try:
@@ -175,7 +175,7 @@ def header():
         if st.button("📤 Enviar feedback", use_container_width=True, type="primary"):
             if comentarios:
                 response = lambda_client_feedback.invoke_sync(
-                    payload={"body": {"feedback": comentarios, "session_id": session_id}},
+                    payload={"body": {"feedback": comentarios, "session_id": st.session_state.session_id}},
                 )
                 if response["statusCode"] == 200:
                     alert = st.success("Feedback enviado correctamente", icon="✅")
