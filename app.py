@@ -47,7 +47,6 @@ def get_response(user_input, session_id):
     response = lambda_client_bedrock.invoke_sync(
         payload={"body": {"query": user_input, "session_id": st.session_state.session_id}},
     )
-    time.sleep(3)
     logger.info(response)
     try:
         response_output = {"answer": json.loads(response["body"])["answer"]}
@@ -64,7 +63,6 @@ def header():
     font_b64 = get_base64("./assets/fonts/KdamThmorPro-Regular.ttf")
     inter_b64 = get_base64("./assets/fonts/Inter-VariableFont_opsz,wght.ttf")
     abeeze_b64 = get_base64("./assets/fonts/ABeeZee-Italic.ttf")
-    inei_logo_b64 = get_base64("./assets/img/Logotipo-INEI.png")
     st.markdown(
         """
     <style>
@@ -180,13 +178,13 @@ def header():
                     payload={"body": {"feedback": comentarios, "session_id": session_id}},
                 )
                 if response["statusCode"] == 200:
-                    st.success("Feedback enviado correctamente", icon="✅")
+                    alert = st.success("Feedback enviado correctamente", icon="✅")
                 else:
-                    st.error("Error al enviar el feedback", icon="❌")
+                    alert = st.error("Error al enviar el feedback", icon="❌")
             else:
-                st.warning("Por favor escribe tus comentarios", icon="⚠️")
-
-
+                alert = st.warning("Por favor escribe tus comentarios", icon="⚠️")
+            time.sleep(3)
+            alert.empty()
 
         st.markdown('<div class="feedback-title">🔄 ¿Algún problema?', unsafe_allow_html=True)
         st.markdown("<div class='guia-disclaimer'>Resetea el chat para empezar de nuevo</div>", unsafe_allow_html=True)
