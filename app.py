@@ -45,7 +45,7 @@ def get_response(user_input, session_id):
     """
     logger.info(f"session id: {session_id}")
     response = lambda_client_bedrock.invoke_sync(
-        payload={"body": {"query": user_input, "session_id": session_id}},
+        payload={"body": {"query": user_input, "session_id": st.session_state.session_id}},
     )
     time.sleep(3)
     logger.info(response)
