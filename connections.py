@@ -11,15 +11,6 @@ if os.environ.get("ACCOUNT_ID") is None:
     os.environ["ACCOUNT_ID"] = session.client("sts").get_caller_identity().get("Account")
     os.environ["AWS_REGION"] = session.region_name
 
-if os.environ.get("LAMBDA_FUNCTION_NAME") is None:
-    try:
-        os.environ["LAMBDA_FUNCTION_NAME"] = "getAgentResponse"
-    except Exception:
-        raise ValueError("LAMBDA_FUNCTION_NAME not found in environment")
-else:
-    os.environ["LAMBDA_FUNCTION_NAME"]
-
-
 class OptimizedLambdaClient:
     """Cliente Lambda optimizado para Streamlit"""
 

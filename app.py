@@ -177,14 +177,13 @@ def header():
                 response = lambda_client_feedback.invoke_sync(
                     payload={"body": {"feedback": comentarios, "session_id": st.session_state.session_id}},
                 )
+                logger.info(json.dumps(response))
                 if response["statusCode"] == 200:
-                    alert = st.success("Feedback enviado correctamente", icon="✅")
+                    st.success("Feedback enviado correctamente", icon="✅")
                 else:
-                    alert = st.error("Error al enviar el feedback", icon="❌")
+                    st.error("Error al enviar el feedback", icon="❌")
             else:
-                alert = st.warning("Por favor escribe tus comentarios", icon="⚠️")
-            time.sleep(3)
-            alert.empty()
+                st.warning("Por favor escribe tus comentarios", icon="⚠️")
 
         st.markdown('<div class="feedback-title">🔄 ¿Algún problema?', unsafe_allow_html=True)
         st.markdown("<div class='guia-disclaimer'>Resetea el chat para empezar de nuevo</div>", unsafe_allow_html=True)
@@ -204,18 +203,7 @@ def header():
     col1_1, col1_2 = st.columns([1, 12], vertical_alignment="top")
     with col1_1:
         pass
-        # inei_logo_html = f"""
-        # <style>
-        # .hero-inei-logo {{
-        #     position: relative;
-        #     top: 1px;
-        #     left: 30px;
-        #     height: 100px;
-        # }}
-        # </style>
-        # <img src="data:image/png;base64,{inei_logo_b64}" class="hero-inei-logo" />
-        # """
-        # st.markdown(inei_logo_html, unsafe_allow_html=True)
+        
     with col1_2:
         badge_html = f"""
         <style>
@@ -407,6 +395,7 @@ def show_message():
     .stChatInput div {
         min-height: 80px !important;
         font-size: 16px !important;
+        bottom: 10px !important;
     }
     </style>""", unsafe_allow_html=True)
 
@@ -443,19 +432,22 @@ def show_footer(logo_path, inei_logo_path):
     bin_inei = get_base64(inei_logo_path)
     page_ft_image = f"""
     <style>
-      .corner-badge{{
+    .corner-badge{{
         position: fixed; right: 14px; bottom: 14px; z-index: 9999;
         display: inline-flex; align-items: center; gap: 8px;
-        font-size: 18px; font-weight: 600;
-      }}
-      .corner-badge img{{
-        height: 36px; width: auto; display: block;
+        font-size: 16px; font-weight: 600;
+    }}
+    .corner-badge-inei{{
+        height: 44px; width: auto; display: block;
+    }}
+    .corner-badge-labstat{{
+        height: 30px; width: auto; display: block;
     }}
     </style>
     <div class="corner-badge">
-      <img src="data:image/png;base64,{bin_inei}" alt="INEI">
+      <img class="corner-badge-inei" src="data:image/png;base64,{bin_inei}" alt="INEI">
       <span>Power by:</span>
-      <img src="data:image/png;base64,{bin_footer}" alt="LabStat">
+      <img class="corner-badge-labstat" src="data:image/png;base64,{bin_footer}" alt="LabStat">
     </div>
     """
     st.markdown(page_ft_image, unsafe_allow_html=True)
@@ -465,10 +457,10 @@ def main():
     """
     Streamlit APP
     """
+    initialization()
     header()
     show_header("./assets/img/Logotipo-INEI.png")
     set_background("./assets/img/Placa circuito.png")
-    initialization()
     show_message()
     show_footer("./assets/img/Logo de Labstat.png", "./assets/img/Logotipo-INEI.png")
 
