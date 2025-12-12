@@ -1,11 +1,16 @@
 from datetime import datetime
+import time
 import logging
 import streamlit as st
 import random
 import json
 from typing import Dict, Any
 
-from connections import get_lambda_client_bedrock, get_lambda_client_feedback
+from connections import (
+    get_lambda_client_bedrock,
+    get_lambda_client_feedback,
+    get_dynamodb_client,
+)
 import config
 import styles
 from utils import get_base64
@@ -17,6 +22,7 @@ logger.setLevel(logging.INFO)
 # Initialize Lambda clients
 lambda_client_bedrock = get_lambda_client_bedrock("getAgentResponse")
 lambda_client_feedback = get_lambda_client_feedback("SendFeedbackFunction")
+dynamodb_client = get_dynamodb_client("conversationHistory")
 
 
 def response_generator() -> str:
@@ -44,14 +50,23 @@ def get_response(user_input: str, session_id: str) -> Dict[str, Any]:
     response = lambda_client_bedrock.invoke_sync(
         payload={"body": {"query": user_input, "session_id": session_id}},
     )
+    start_time = time.time()
     logger.info(response)
     try:
         response_output = {"answer": json.loads(response["body"])["answer"]}
     except Exception as e:
         logger.error(f"Error parsing response: {e}")
-        response_output = {
-            "answer": "Hola, no entendí tu mensaje. ¡Puedes reformular mejor tu pregunta por favor!"
-        }
+        message = "Hola, no entendí tu mensaje. ¡Puedes reformular mejor tu pregunta por favor!"
+        dynamodb_client.write_row(
+            {
+                "sessionId": session_id,
+                "creationDate": datetime.fromtimestamp(start_time).isoformat(),
+                "userMessage": user_input,
+                "response": message,
+                "finalizationDate": datetime.fromtimestamp(time.time()).isoformat(),
+            }
+        )
+        response_output = {"answer": message}
 
     logger.info(f"response_output from genai lambda: {response_output}")
     return response_output
